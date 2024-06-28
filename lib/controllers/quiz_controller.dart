@@ -8,4 +8,19 @@ class QuizController extends ChangeNotifier {
   Stream<QuerySnapshot> get list {
     return _quizService.getQuestions();
   }
+
+  void addQuestion({
+    required String questionText,
+    required String answer1,
+    required String answer2,
+    required String answer3,
+    required String correctVariant,
+  }) {
+    _quizService.addQuestion(
+        questionText: questionText,
+        answer1: answer1,
+        answer2: answer2,
+        answer3: answer3,
+        correctVariant: correctVariant);
+  }
 }

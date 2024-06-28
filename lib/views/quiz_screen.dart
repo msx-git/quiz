@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz/controllers/quiz_controller.dart';
 import 'package:quiz/models/question.dart';
+import 'package:quiz/views/manage_quiz.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -23,157 +24,211 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     final quizController = context.watch<QuizController>();
     return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 100,
+        backgroundColor: Colors.indigoAccent,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        toolbarHeight: 80,
+        leading: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            Image.asset(
+              'assets/gifs/face.gif',
+              height: 70,
+            ),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+        backgroundColor: Colors.indigoAccent,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        child: Column(
+          children: [
+            const SafeArea(child: SizedBox(height: 50)),
+            ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const ManageQuiz(),
+                  ),
+                );
+              },
+              title: Text(
+                "Manage quiz",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              trailing: const Icon(
+                CupertinoIcons.chevron_forward,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+      ),
       backgroundColor: Colors.indigoAccent,
       body: StreamBuilder(
-          stream: quizController.list,
-          builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.data == null) {
-              return const Center(
-                child: Text("There's not questions in the Quiz."),
-              );
-            }
-            final questions = snapshot.data!.docs;
-            if (questions.isEmpty) {
-              return Text('No data');
-            }
-            return Stack(
-              children: [
-                Visibility(
-                  visible: _didAnswer,
-                  child: _foundCorrectAnswer
-                      ? Stack(
-                          children: [
-                            Transform.flip(
-                              flipX: true,
-                              child: Lottie.asset('assets/clap.json'),
-                            ),
-                            Lottie.asset('assets/congrats.json'),
-                          ],
-                        )
-                      : Stack(
-                          children: [
-                            Transform.flip(
-                              flipX: true,
-                              child: Lottie.asset('assets/thumbs_down.json'),
-                            ),
-                            Lottie.asset('assets/thumbs_down.json'),
-                          ],
-                        ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      const SafeArea(child: SizedBox(height: 20)),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset(
-                          'assets/gifs/face.gif',
-                          height: 60,
-                        ),
+        stream: quizController.list,
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.data == null) {
+            return const Center(
+              child: Text("There's not questions in the Quiz."),
+            );
+          }
+          final questions = snapshot.data!.docs;
+          if (questions.isEmpty) {
+            return const Text('No data');
+          }
+          return Stack(
+            children: [
+              Visibility(
+                visible: _didAnswer,
+                child: _foundCorrectAnswer
+                    ? Stack(
+                        children: [
+                          Transform.flip(
+                            flipX: true,
+                            child: Lottie.asset('assets/clap.json'),
+                          ),
+                          Lottie.asset('assets/congrats.json'),
+                        ],
+                      )
+                    : Stack(
+                        children: [
+                          Transform.flip(
+                            flipX: true,
+                            child: Lottie.asset('assets/thumbs_down.json'),
+                          ),
+                          Lottie.asset('assets/thumbs_down.json'),
+                        ],
                       ),
-                      //const SizedBox(height: 40),
-                      Expanded(
-                        child: PageView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          onPageChanged: (value) {
-                            setState(() {
-                              _didAnswer = false;
-                              _foundCorrectAnswer = false;
-                            });
-                          },
-                          controller: _pageController,
-                          scrollDirection: Axis.vertical,
-                          itemCount: questions.length,
-                          itemBuilder: (context, index) {
-                            final question =
-                                Question.fromJson(questions[index]);
-                            return Column(
-                              children: [
-                                const SizedBox(height: 40),
-                                Text(
-                                  question.questionText,
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white, fontSize: 30),
-                                ),
-                                const SizedBox(height: 50),
-                                ...List.generate(
-                                  question.answers.length,
-                                  (index2) {
-                                    return ListTile(
-                                      onTap: () {
-                                        if (index == questions.length - 1) {
-                                          Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                              builder: (context) =>
-                                                  const Text("Resluts"),
-                                            ),
-                                          );
-                                        }
-                                        setState(() => _didAnswer = true);
-                                        if (question.answers[index2].keys
-                                                .toList()
-                                                .first ==
-                                            question.correctVariant) {
-                                          setState(
-                                              () => _foundCorrectAnswer = true);
-                                        }
-                                        Future.delayed(
-                                          const Duration(seconds: 2),
-                                          () {
-                                            _pageController.nextPage(
-                                              duration: const Duration(
-                                                  milliseconds: 400),
-                                              curve: Curves.linear,
-                                            );
-                                          },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  children: [
+                    const SafeArea(child: SizedBox(height: 20)),
+                    // Align(
+                    //   alignment: Alignment.centerLeft,
+                    //   child: Image.asset(
+                    //     'assets/gifs/face.gif',
+                    //     height: 60,
+                    //   ),
+                    // ),
+                    //const SizedBox(height: 40),
+                    Expanded(
+                      child: PageView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        onPageChanged: (value) {
+                          setState(() {
+                            _didAnswer = false;
+                            _foundCorrectAnswer = false;
+                          });
+                        },
+                        controller: _pageController,
+                        scrollDirection: Axis.vertical,
+                        itemCount: questions.length,
+                        itemBuilder: (context, index) {
+                          final question = Question.fromJson(questions[index]);
+                          return Column(
+                            children: [
+                              const SizedBox(height: 40),
+                              Text(
+                                question.questionText,
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 30),
+                              ),
+                              const SizedBox(height: 50),
+                              ...List.generate(
+                                question.answers.length,
+                                (index2) {
+                                  return ListTile(
+                                    onTap: () {
+                                      if (index == questions.length - 1) {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) =>
+                                                const Text("Resluts"),
+                                          ),
                                         );
-                                      },
-                                      leading: Text(
-                                        question.answers[index2].keys
-                                            .toList()
-                                            .first,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 20),
+                                      }
+                                      setState(() => _didAnswer = true);
+                                      if (question.answers[index2].keys
+                                              .toList()
+                                              .first ==
+                                          question.correctVariant) {
+                                        setState(
+                                            () => _foundCorrectAnswer = true);
+                                      }
+                                      Future.delayed(
+                                        const Duration(seconds: 2),
+                                        () {
+                                          _pageController.nextPage(
+                                            duration: const Duration(
+                                              milliseconds: 400,
+                                            ),
+                                            curve: Curves.linear,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    leading: Text(
+                                      question.answers[index2].keys
+                                          .toList()
+                                          .first,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
                                       ),
-                                      title: Text(
-                                        '${question.answers[index2].values.toList().first}',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 26),
+                                    ),
+                                    title: Text(
+                                      '${question.answers[index2].values.toList().first}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26,
                                       ),
-                                    );
-                                  },
-                                ),
-                                Expanded(
-                                  child: Visibility(
-                                    visible: _didAnswer,
-                                    child: Center(
-                                      child: Lottie.asset(
-                                        _foundCorrectAnswer
-                                            ? 'assets/tick.json'
-                                            : 'assets/error.json',
-                                        height: 80,
-                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Expanded(
+                                child: Visibility(
+                                  visible: _didAnswer,
+                                  child: Center(
+                                    child: Lottie.asset(
+                                      _foundCorrectAnswer
+                                          ? 'assets/tick.json'
+                                          : 'assets/error.json',
+                                      height: 80,
                                     ),
                                   ),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            );
-          }),
+              ),
+            ],
+          );
+        },
+      ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
