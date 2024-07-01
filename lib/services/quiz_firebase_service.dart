@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quiz/models/question.dart';
 
 class QuizFirebaseService {
   final _quizCollection = FirebaseFirestore.instance.collection('quiz');
@@ -7,23 +8,15 @@ class QuizFirebaseService {
     yield* _quizCollection.snapshots();
   }
 
-  void addQuestion({
-    required String questionText,
-    required String answer1,
-    required String answer2,
-    required String answer3,
-    required String correctVariant,
-  }) {
-    _quizCollection.add(
-      {
-        "questionText": questionText,
-        'answers': [
-          {'A': answer1},
-          {'B': answer2},
-          {'C': answer3},
-        ],
-        'correctVariant': correctVariant,
-      },
-    );
+  void addQuestion({required Question question}) {
+    _quizCollection.add(question.toJson());
+  }
+
+  void editQuestion({required Question question}) {
+    _quizCollection.doc(question.id).update(question.toJson());
+  }
+
+  void deleteQuestion({required String id}) {
+    _quizCollection.doc(id).delete();
   }
 }
