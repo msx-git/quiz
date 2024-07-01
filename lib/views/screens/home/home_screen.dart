@@ -1,14 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz/controllers/auth_controller.dart';
-import 'package:quiz/utils/extensions.dart';
 import 'package:quiz/views/widgets/app_drawer.dart';
 
 import '../../../controllers/quiz_controller.dart';
-import '../manage_quiz.dart';
 import 'quiz_page.dart';
 
 class HomeScreen extends StatelessWidget {
