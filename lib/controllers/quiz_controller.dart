@@ -11,18 +11,15 @@ class QuizController extends ChangeNotifier {
     return _quizService.getQuestions();
   }
 
-  void addQuestion({required Question question}) {
-    _quizService.addQuestion(question: question);
-    notifyListeners();
+  Future<void> addQuestion({required Question question}) async {
+    await _quizService.addQuestion(question: question);
   }
 
-  void editQuestion({required Question question}) {
-    _quizService.editQuestion(question: question);
-    notifyListeners();
+  Future<void> editQuestion({required Question question}) async {
+    await _quizService.editQuestion(question: question);
   }
 
-  void deleteQuestion({required String id}) {
-    _quizService.deleteQuestion(id: id);
-    notifyListeners();
+  Future<void> deleteQuestion({required String id}) async {
+    await _quizService.deleteQuestion(id: id);
   }
 }

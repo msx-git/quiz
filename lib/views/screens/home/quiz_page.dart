@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz/controllers/leaderboard_controller.dart';
 
 import '../../../models/question.dart';
 import '../result/result_screen.dart';
@@ -98,6 +101,13 @@ class _QuizScreenState extends State<QuizScreen> {
                                             ),
                                           ),
                                           (route) => route is ResultScreen,
+                                        );
+                                        context
+                                            .read<LeaderboardController>()
+                                            .addRecord(
+                                          email: FirebaseAuth.instance
+                                              .currentUser!.email!,
+                                          points: corrects * 10,
                                         );
                                       }
                                       Future.delayed(

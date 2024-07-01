@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz/controllers/auth_controller.dart';
 import 'package:quiz/utils/extensions.dart';
+import 'package:quiz/views/widgets/app_drawer.dart';
 
 import '../../../controllers/quiz_controller.dart';
 import '../manage_quiz.dart';
@@ -37,55 +39,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      endDrawer: Drawer(
-        backgroundColor: Colors.indigoAccent,
-        surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        child: Column(
-          children: [
-            const SafeArea(child: SizedBox(height: 50)),
-            ListTile(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const ManageQuiz(),
-                  ),
-                );
-              },
-              title: Text(
-                "Manage quiz",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-              trailing: const Icon(
-                CupertinoIcons.chevron_forward,
-                color: Colors.white,
-              ),
-            ),
-            const Spacer(),
-            ListTile(
-              onTap: () async {
-                await context.read<AuthController>().signOut();
-              },
-              title: Text(
-                "Sign Out",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-              trailing: const Icon(
-                Icons.logout,
-                color: Colors.white,
-              ),
-            ),
-            20.height,
-          ],
-        ),
-      ),
+      endDrawer: const AppDrawer(),
       body: StreamBuilder(
         stream: quizController.list,
         builder: (context, snapshot) {

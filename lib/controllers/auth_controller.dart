@@ -22,7 +22,7 @@ class AuthController with ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    _firebaseAuthService.signOut();
+    await _firebaseAuthService.signOut();
     notifyListeners();
   }
 }

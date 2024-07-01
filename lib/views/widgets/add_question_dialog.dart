@@ -77,7 +77,8 @@ class AddQuestionDialog extends StatelessWidget {
               validator: (value) {
                 if (value!.trim().isEmpty) {
                   return "Please, enter correct answer variant";
-                } else if (value != "A" || value != "B" || value != "C") {
+                }
+                if (value != "A" && value != "B" && value != "C") {
                   return "Enter only 'A' or 'B' or 'C'";
                 }
                 return null;

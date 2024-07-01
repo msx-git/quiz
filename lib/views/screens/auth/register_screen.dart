@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz/utils/extensions.dart';
+import 'package:quiz/utils/show_loader.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../widgets/app_textformfield.dart';
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   submit() async {
     if (formKey.currentState!.validate()) {
+      Messages.showLoadingDialog(context);
       await context
           .read<AuthController>()
           .register(
@@ -32,6 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           emailController.clear();
           passwordController.clear();
           passwordConfirmController.clear();
+          Navigator.pop(context);
           Navigator.pop(context);
         },
       );

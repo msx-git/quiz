@@ -37,7 +37,8 @@ class _ManageQuizState extends State<ManageQuiz> {
           if (questions.isEmpty) {
             return const Text('No data');
           }
-          return ListView.builder(
+          return ListView.separated(
+            separatorBuilder: (context, index) => Divider(),
             itemCount: questions.length,
             itemBuilder: (context, index) {
               final question = Question.fromJson(questions[index]);
@@ -47,6 +48,30 @@ class _ManageQuizState extends State<ManageQuiz> {
                 child: ExpansionTile(
                   leading: Text("${index + 1}"),
                   title: Text(question.questionText),
+                  subtitle: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () async {},
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.teal,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await context
+                              .read<QuizController>()
+                              .editQuestion(question: question);
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ],
+                  ),
                   children: [
                     ...List.generate(
                       question.answers.length,

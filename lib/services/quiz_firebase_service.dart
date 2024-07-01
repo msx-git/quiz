@@ -8,15 +8,15 @@ class QuizFirebaseService {
     yield* _quizCollection.snapshots();
   }
 
-  void addQuestion({required Question question}) {
-    _quizCollection.add(question.toJson());
+  Future<void> addQuestion({required Question question}) async {
+    await _quizCollection.add(question.toJson());
   }
 
-  void editQuestion({required Question question}) {
-    _quizCollection.doc(question.id).update(question.toJson());
+  Future<void> editQuestion({required Question question}) async {
+    await _quizCollection.doc(question.id).update(question.toJson());
   }
 
-  void deleteQuestion({required String id}) {
-    _quizCollection.doc(id).delete();
+  Future<void> deleteQuestion({required String id}) async {
+    await _quizCollection.doc(id).delete();
   }
 }
