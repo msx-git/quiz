@@ -38,7 +38,7 @@ class _ManageQuizState extends State<ManageQuiz> {
             return const Text('No data');
           }
           return ListView.separated(
-            separatorBuilder: (context, index) => Divider(),
+            separatorBuilder: (context, index) => const Divider(),
             itemCount: questions.length,
             itemBuilder: (context, index) {
               final question = Question.fromJson(questions[index]);
@@ -53,8 +53,21 @@ class _ManageQuizState extends State<ManageQuiz> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        onPressed: () async {},
-                        icon: Icon(
+                        onPressed: () async {
+                          await context.read<QuizController>().editQuestion(
+                                question: Question(
+                                  id: question.id,
+                                  questionText: "New questionText",
+                                  answers: [
+                                    {"A": "new A"},
+                                    {"B": "new B"},
+                                    {"C": "new C"},
+                                  ],
+                                  correctVariant: "A",
+                                ),
+                              );
+                        },
+                        icon: const Icon(
                           Icons.edit,
                           color: Colors.teal,
                         ),
@@ -63,9 +76,9 @@ class _ManageQuizState extends State<ManageQuiz> {
                         onPressed: () async {
                           await context
                               .read<QuizController>()
-                              .editQuestion(question: question);
+                              .deleteQuestion(id: question.id!);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.delete,
                           color: Colors.redAccent,
                         ),

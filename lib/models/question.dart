@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Question {
-  final String id;
+  final String? id;
   final String questionText;
   final List answers;
   final String correctVariant;
 
   Question({
-    required this.id,
+    this.id,
     required this.questionText,
     required this.answers,
     required this.correctVariant,

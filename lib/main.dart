@@ -49,10 +49,9 @@ class MyApp extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
-              if (snapshot.hasData) {
-                return HomeScreen();
-              }
-              return const LoginScreen();
+              final user = snapshot.data;
+
+              return user == null ? const LoginScreen() : HomeScreen();
             },
           ),
           routes: {
